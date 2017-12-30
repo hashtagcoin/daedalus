@@ -133,7 +133,7 @@ makeInstaller cfg = do
 
   case icApi cfg of
     "cardano" -> do
-      writeFile (dir <> "/Daedalus") $ unlines
+      writeFile (dir <> "/" <> appName cfg) $ unlines
         [ "#!/usr/bin/env bash"
         , "cd \"$(dirname $0)\""
         , "mkdir -p \"$HOME/Library/Application Support/Daedalus/Secrets-1.0\""
@@ -141,7 +141,7 @@ makeInstaller cfg = do
         , doLauncher
         ]
     "etc" -> do
-      writeFile (dir <> "/Daedalus") $ unlines
+      writeFile (dir <> "/" <> appName cfg) $ unlines
         [ "#!/usr/bin/env bash"
         , "cd \"$(dirname $0)\""
         , "export API=etc"
@@ -155,7 +155,7 @@ makeInstaller cfg = do
         , "/Applications/DaedalusMantis.app/Contents/Resources/app/mantis.app/Contents/MacOS/mantis bootstrap " <> bootstrap_url <> " " <> bootstrap_hash <> " " <> show bootstrap_size
         ]
       run "chmod" [ "+x", T.pack (dir <> "/bootstrap.sh") ]
-  run "chmod" ["+x", T.pack (dir <> "/Daedalus")]
+  run "chmod" ["+x", T.pack (dir <> "/" <> appName cfg)]
 
 
 
