@@ -86,7 +86,7 @@ main = do
 
 makeInstaller :: InstallerConfig -> IO ()
 makeInstaller cfg = do
-  run "ls" [ "-lh", "../release", "../release/darwin-x64", "../release/darwin-x64/DaedalusMantis-darwin-x64", "../release/darwin-x64/DaedalusMantis-darwin-x64/DaedalusMantis.app/Contents/MacOS/" ]
+  run "ls" [ "-lh", "../release", "../release/darwin-x64", "../release/darwin-x64/DaedalusMantis-darwin-x64", "../release/darwin-x64/DaedalusMantis-darwin-x64/DaedalusMantis.app/Contents/MacOS/", "../release/darwin-x64/Daedalus-darwin-x64" ]
   -- TODO, pass this in
   let
     bootstrap_url :: String
