@@ -66,7 +66,7 @@ main = do
         cfg' = cfg {
             appNameLowercase = "daedalusmantis"
           , scriptsDir = "data/scripts-mantis"
-          , appRoot = "../release/darwin-x64/Daedalus-darwin-x64/DaedalusMantis.app"
+          , appRoot = "../release/darwin-x64/DaedalusMantis-darwin-x64/DaedalusMantis.app"
         }
         cfgtrue = cfg' {
             pkg = "dist/Daedalus-mantis-bootstrap-installer-" <> T.pack version <> ".pkg"
@@ -83,7 +83,7 @@ main = do
 
 makeInstaller :: InstallerConfig -> IO ()
 makeInstaller cfg = do
-  run "ls" [ "-lh", "../release", "../release/darwin-x64", "../release/darwin-x64/Daedalus-darwin-x64" ]
+  run "ls" [ "-lh", "../release", "../release/darwin-x64", "../release/darwin-x64/DaedalusMantis-darwin-x64" ]
   -- TODO, pass this in
   let
     bootstrap_url :: String
