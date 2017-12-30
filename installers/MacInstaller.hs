@@ -16,6 +16,7 @@ import           Turtle.Line          (unsafeTextToLine)
 
 import           Launcher
 import           RewriteLibs          (chain)
+import           System.IO
 
 data InstallerConfig = InstallerConfig {
     icApi :: String
@@ -28,6 +29,7 @@ data InstallerConfig = InstallerConfig {
 
 setupKeychain :: IO ()
 setupKeychain = do
+  print "setting up keychain"
   -- Sign the installer with a special macOS dance
   run "security" ["create-keychain", "-p", "travis", "macos-build.keychain"]
   run "security" ["default-keychain", "-s", "macos-build.keychain"]
@@ -35,14 +37,15 @@ setupKeychain = do
   unless (exitcode == ExitSuccess) $ error "Signing failed"
   run "security" ["set-key-partition-list", "-S", "apple-tool:,apple:", "-s", "-k", "travis", "macos-build.keychain"]
   run "security" ["unlock-keychain", "-p", "travis", "macos-build.keychain"]
+  print "done keychain setup"
 
 main :: IO ()
 main = do
+  hSetBuffering stdout NoBuffering
   api <- fromMaybe "cardano" <$> lookupEnv "API"
   version <- fromMaybe "dev" <$> lookupEnv "DAEDALUS_VERSION"
   isPullRequest <- fromMaybe "true" <$> lookupEnv "TRAVIS_PULL_REQUEST"
-  if isPullRequest == "false" then do
-    setupKeychain
+  if isPullRequest == "false" then setupKeychain
   else pure ()
   let
     cfg :: InstallerConfig
