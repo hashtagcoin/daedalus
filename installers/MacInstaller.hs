@@ -21,6 +21,7 @@ import           System.IO
 data InstallerConfig = InstallerConfig {
     icApi :: String
   , appNameLowercase :: T.Text
+  , appName :: String
   , pkg :: T.Text
   , scriptsDir :: T.Text
   , predownloadChain :: Bool
@@ -49,12 +50,13 @@ main = do
   else pure ()
   let
     cfg :: InstallerConfig
-    cfg = InstallerConfig api undefined undefined undefined False undefined
+    cfg = InstallerConfig api undefined undefined undefined undefined False undefined
   case api of
     "cardano" -> do
       let
         cfg' = cfg {
             appNameLowercase = "daedalus"
+          , appName = "Daedalus"
           , pkg = "dist/Daedalus-installer-" <> T.pack version <> ".pkg"
           , scriptsDir = "data/scripts"
           , appRoot = "../release/darwin-x64/Daedalus-darwin-x64/Daedalus.app"
@@ -65,6 +67,7 @@ main = do
       let
         cfg' = cfg {
             appNameLowercase = "daedalusmantis"
+          , appName = "DaedalusMantis"
           , scriptsDir = "data/scripts-mantis"
           , appRoot = "../release/darwin-x64/DaedalusMantis-darwin-x64/DaedalusMantis.app"
         }
@@ -83,7 +86,7 @@ main = do
 
 makeInstaller :: InstallerConfig -> IO ()
 makeInstaller cfg = do
-  run "ls" [ "-lh", "../release", "../release/darwin-x64", "../release/darwin-x64/DaedalusMantis-darwin-x64" ]
+  run "ls" [ "-lh", "../release/darwin-x64/DaedalusMantis-darwin-x64", "../release/darwin-x64/DaedalusMantis-darwin-x64/DaedalusMantis.app/Contents/MacOS/" ]
   -- TODO, pass this in
   let
     bootstrap_url :: String
@@ -125,7 +128,7 @@ makeInstaller cfg = do
 
   -- Prepare launcher
   de <- doesFileExist (dir <> "/Frontend")
-  unless de $ renameFile (dir <> "/Daedalus") (dir <> "/Frontend")
+  unless de $ renameFile (dir <> "/" <> appName cfg) (dir <> "/Frontend")
   run "chmod" ["+x", T.pack (dir <> "/Frontend")]
 
   case icApi cfg of
